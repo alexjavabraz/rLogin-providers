@@ -115,12 +115,17 @@ export class LedgerProvider extends RLoginEIP1193Provider {
   private async validateConnectionAndPersonalSign (hexMessage: string): Promise<string> {
     this.#validateIsConnected()
     const message = convertFromHex(hexMessage)
-    const result = await this.appEth.signPersonalMessage(this.dpath, Buffer.from(message).toString('hex'))
+    const messageHex = Buffer.from(message).toString('hex')
+    const result = await this.appEth.signPersonalMessage(this.dpath, messageHex)
     const v = result.v - 27
     let v2 = v.toString(16)
     if (v2.length < 2) {
       v2 = '0' + v
     }
+    console.log(`message is ${message}`);
+    console.log(`messagehex is ${messageHex}`);
+    console.log(`result is ${result}`);
+    console.log(`dpath is ${this.dpath}`);
 
     return `0x${result.r}${result.s}${v2}`
   }
